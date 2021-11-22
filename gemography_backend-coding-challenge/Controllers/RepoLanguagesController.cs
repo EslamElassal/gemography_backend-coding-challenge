@@ -30,7 +30,9 @@ namespace gemography_backend_coding_challenge.Controllers
         //consume github api and return original result without any operations 
         async Task<string> GetRepoDataAsync()
         {
-            string url = $"https://api.github.com/search/repositories?q=created:%3E2021-11-11&sort=stars&order=desc&per_page=100";
+            //return recent first 100 repo in first page with current date
+            
+            string url = "https://api.github.com/search/repositories?q=created:%3E"+DateTime.Now.AddDays(-30).ToString("yyyy-MM-dd").Trim()+"&sort=stars&order=desc&per_page=100";
 
 
             using (HttpClient client = new HttpClient())
