@@ -54,8 +54,18 @@ namespace gemography_backend_coding_challenge.Controllers
             }
         }
 
+        //this action to return return our language list in json
+        //api end point =>https://localhost:44358/api/RepoLanguages/LanguagesList
+        [HttpGet("LanguagesList")]
+        public async Task<IActionResult> LanguagesList()
+        {
+
+            return Ok(await GetRepoModifiedListAsync(await GetRepoDataAsync()));
+
+
+        }
         //For every language,i return the follwing data  :
-         //Number of repos using this language
+        //Number of repos using this language
         // The list of repos using the language
         async Task<List<RepoLists>> GetRepoModifiedListAsync(string JsonData)
         {
