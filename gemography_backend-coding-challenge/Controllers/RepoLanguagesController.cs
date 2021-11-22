@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using gemography_backend_coding_challenge.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
@@ -20,6 +21,7 @@ namespace gemography_backend_coding_challenge.Controllers
             _logger = logger;
         }
         //this action to return api json data from github
+        //api end point =>https://localhost:44358/api/RepoLanguages
         [HttpGet]
         public async Task<IActionResult> Get()
         {
@@ -50,6 +52,13 @@ namespace gemography_backend_coding_challenge.Controllers
                 }
             }
         }
-         
+
+        //For every language,i return the follwing data  :
+         //Number of repos using this language
+        // The list of repos using the language
+        async Task<List<RepoLists>> GetRepoModifiedListAsync(string JsonData)
+        {
+            return null;    
+        }
     }
 }
