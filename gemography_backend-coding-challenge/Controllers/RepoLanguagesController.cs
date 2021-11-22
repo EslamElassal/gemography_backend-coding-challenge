@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,5 +12,11 @@ namespace gemography_backend_coding_challenge.Controllers
     [ApiController]
     public class RepoLanguagesController : ControllerBase
     {
+        private readonly ILogger<RepoLanguagesController> _logger;
+
+        public RepoLanguagesController(ILogger<RepoLanguagesController> logger)
+        {
+            _logger = logger;
+        }
     }
 }
