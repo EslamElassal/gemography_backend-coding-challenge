@@ -19,7 +19,15 @@ namespace gemography_backend_coding_challenge.Controllers
         {
             _logger = logger;
         }
+        //this action to return api json data from github
+        [HttpGet]
+        public async Task<IActionResult> Get()
+        {
+            var result = await GetRepoDataAsync();
+            return Ok(result);
 
+        }
+        //consume github api and return original result without any operations 
         async Task<string> GetRepoDataAsync()
         {
             string url = $"https://api.github.com/search/repositories?q=created:%3E2021-11-11&sort=stars&order=desc&per_page=100";
