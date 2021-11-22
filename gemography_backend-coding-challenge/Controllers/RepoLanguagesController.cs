@@ -18,5 +18,11 @@ namespace gemography_backend_coding_challenge.Controllers
         {
             _logger = logger;
         }
+
+        async Task<string> GetRepoDataAsync()
+        {
+            return null;
+        }
+         
     }
 }
