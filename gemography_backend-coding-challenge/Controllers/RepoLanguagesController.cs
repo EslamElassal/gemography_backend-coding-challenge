@@ -4,6 +4,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace gemography_backend_coding_challenge.Controllers
@@ -21,7 +22,23 @@ namespace gemography_backend_coding_challenge.Controllers
 
         async Task<string> GetRepoDataAsync()
         {
-            return null;
+            string url = $"https://api.github.com/search/repositories?q=created:%3E2021-11-11&sort=stars&order=desc&per_page=100";
+
+
+            using (HttpClient client = new HttpClient())
+            {
+                client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
+
+                client.DefaultRequestHeaders.UserAgent.TryParseAdd("request");//Set the User Agent to "request"
+
+                using (HttpResponseMessage response = client.GetAsync(url).Result)
+                {
+                    response.EnsureSuccessStatusCode();
+                    var Result = await response.Content.ReadAsStringAsync();
+
+                    return Result;
+                }
+            }
         }
          
     }
