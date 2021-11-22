@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -58,7 +59,25 @@ namespace gemography_backend_coding_challenge.Controllers
         // The list of repos using the language
         async Task<List<RepoLists>> GetRepoModifiedListAsync(string JsonData)
         {
-            return null;    
+            RepoLanguages _dataResponse = JsonConvert.DeserializeObject<RepoLanguages>(JsonData);
+            List<string> langs = new List<string>();
+            for (int i = 0; i < _dataResponse.Items.Count; i++)
+            {
+                if (!langs.Contains(_dataResponse.Items[i].Language))
+                    langs.Add(_dataResponse.Items[i].Language);
+            }
+            List<RepoLists> FinalLists = new List<RepoLists>();
+            for (int i = 0; i < langs.Count; i++)
+            {
+                List<Items> FinalItems = _dataResponse.Items.FindAll(x => x.Language == langs[i]);
+                RepoLists temp = new RepoLists();
+                temp.Name = langs[i];
+                temp.Count = FinalItems.Count;
+                temp.RepoList = FinalItems;
+                FinalLists.Add(temp);
+
+            }
+            return FinalLists;
         }
     }
 }
