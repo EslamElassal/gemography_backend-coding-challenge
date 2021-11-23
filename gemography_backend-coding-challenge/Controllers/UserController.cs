@@ -59,7 +59,7 @@ namespace gemography_backend_coding_challenge.Controllers
 
                     _resultViewModel.StatusCode = HttpStatusCode.ExpectationFailed;
                     _resultViewModel.IsSuccess = true;
-                    _resultViewModel.Message =   "تم تسجيل المستخدم بنجاح";
+                    _resultViewModel.Message = "User Registered Successfully";
                     _resultViewModel.Data=new UserDto
             {
                 Username = registerDto.Username,
