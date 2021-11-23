@@ -1,7 +1,9 @@
 ﻿
 using BuisnessLayer.Token;
+using DataLayer.DBEntities;
 using DataLayer.DTOs;
 using DataLayer.Models;
+using DataLayer.Repository;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -20,18 +22,15 @@ namespace gemography_backend_coding_challenge.Controllers
     {
         private readonly ResultViewModel _resultViewModel;
         private readonly ITokenService _tokenService;
+        private readonly IRepository<User> _User;
 
-        public UserController(ResultViewModel resultViewModel,ITokenService tokenService)
+        public UserController(ResultViewModel resultViewModel, ITokenService tokenService, IRepository<User> user)
         {
             _resultViewModel = resultViewModel;
             _tokenService = tokenService;
-            
+            _User = user;
         }
 
-       
-        
-       
-         
         [HttpPost("register")]
         public ActionResult<UserDto> Register(RegisterDto registerDto)
         {
@@ -43,7 +42,7 @@ namespace gemography_backend_coding_challenge.Controllers
                     if (UserExists(registerDto.Username)) { 
                          _resultViewModel.StatusCode = HttpStatusCode.ExpectationFailed;
                         _resultViewModel.IsSuccess = false;
-                        _resultViewModel.Message = (_User.CurrentLanguage == Convert.ToInt64(MessageLanguage.EN)) ? "User Already Exists" : "اسم المستخدم موجود بالفعل";
+                        _resultViewModel.Message =  "User Already Exists" ;
                         return Ok(_resultViewModel);
                          }
 
@@ -51,30 +50,16 @@ namespace gemography_backend_coding_challenge.Controllers
             var user = new User
             {
                 UserName = registerDto.Username.ToLower(),
-                PasswordHashWeb = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(registerDto.Password)),
-                SaltWeb = hmac.Key,
-                ID = 0,
-                IsRegisteredNew = true,
-                IsActive = true,
-                IsDeleted = false,
-                IsAdmin = false,
-                IsAVLUser = true,
-                ControllingDataPrivilege = false,
-                ReportingPrivilege = false,
-                UseMobile = true,
-                UseWeb = true,
-                Rased = true,
-                CreatedDate = DateTime.Now,
-                UserLastEntry = DateTime.Now,
-                GuidId = Guid.NewGuid()
-
-
+                PasswordHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(registerDto.Password)),
+                PasswordSalt = hmac.Key,
+                Id = 0
+                 
             };
             _User.Insert(user);
 
                     _resultViewModel.StatusCode = HttpStatusCode.ExpectationFailed;
                     _resultViewModel.IsSuccess = true;
-                    _resultViewModel.Message = (_User.CurrentLanguage == Convert.ToInt64(MessageLanguage.EN)) ? "Register Successfully" : "تم تسجيل المستخدم بنجاح";
+                    _resultViewModel.Message =   "تم تسجيل المستخدم بنجاح";
                     _resultViewModel.Data=new UserDto
             {
                 Username = registerDto.Username,
@@ -101,7 +86,7 @@ namespace gemography_backend_coding_challenge.Controllers
         {
             if (ModelState.IsValid)
             {
-                VDream.Tables.People.User currentuser = null;
+               User currentuser = null;
                 try { 
 
 
@@ -110,16 +95,8 @@ namespace gemography_backend_coding_challenge.Controllers
 
                     if (user != null)
                     {
-                        var userCheck = _User.SingleOrDefault(x => x.UserName == loginDto.Username && x.IsActive == true && x.IsDeleted == false);
-                        if (userCheck == null)
-                        {
-                            _resultViewModel.StatusCode = HttpStatusCode.ExpectationFailed;
-                            _resultViewModel.IsSuccess = false;
-                            _resultViewModel.Message = (_User.CurrentLanguage == Convert.ToInt64(MessageLanguage.EN)) ? "User Is Inactive or Deleted" : "المستخدم محذوف او غير مفعل";
-                            return Ok(_resultViewModel);
-                        }
-                        else
-                            currentuser = userCheck;
+                         
+                            currentuser = user;
                     }
                     else 
                     { 
@@ -127,75 +104,37 @@ namespace gemography_backend_coding_challenge.Controllers
 
                         _resultViewModel.StatusCode = HttpStatusCode.ExpectationFailed;
                         _resultViewModel.IsSuccess = false;
-                        _resultViewModel.Message = (_User.CurrentLanguage == Convert.ToInt64(MessageLanguage.EN)) ? "Invalid UserName" : "اسم المستخدم غير صحيح";
+                        _resultViewModel.Message =  "Invalid UserName"  ;
                         return Ok(_resultViewModel);
                     }
                         
 
-            using var hmac = new HMACSHA512(user.SaltWeb);
+            using var hmac = new HMACSHA512(user.PasswordSalt);
 
 
             var ComputedHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(loginDto.Password));
             for (int i = 0; i < ComputedHash.Length; i++)
             {
-                if (ComputedHash[i] != user.PasswordHashWeb[i])
+                if (ComputedHash[i] != user.PasswordHash[i])
                         {
                             _resultViewModel.StatusCode = HttpStatusCode.InternalServerError;
                             _resultViewModel.IsSuccess = false;
-                            _resultViewModel.Message = (_User.CurrentLanguage == Convert.ToInt64(MessageLanguage.EN)) ? "Invalid Password" : "كلمة المرور غير صحيحة";
+                            _resultViewModel.Message = "Invalid Password" ;
                             return Ok(_resultViewModel);
                         }
                         
 
             }
  
-                    long BranchId = _Department.FirstOrDefault(comp => currentuser.DepartmentId == comp.ID).BranchId;
-                    long DeviceId = _Device.FirstOrDefault(dev => BranchId == dev.BranchId).ID;
-                    long CompanyId = _Branch.FirstOrDefault(bran => BranchId == bran.ID).CompanyId;
-                    var CompanyLanguages = _CompanyLanguage.Find(compLang => CompanyId == compLang.CompanyId).ToList();
-                    CompanyNames names = new CompanyNames();
-                    for (int i = 0; i < CompanyLanguages.Count; i++)
-                    {
-                        if (CompanyLanguages[i].LanguageId == 5)
-                            names.CompanyNameAr = CompanyLanguages[i].CompanyName;
-                        else
-                            names.CompanyNameEn = CompanyLanguages[i].CompanyName;
-
-                    }
-                     RolesEnum roleEnum = (RolesEnum)Enum.ToObject(typeof(RolesEnum), currentuser.RoleId);
-                    string roleName = roleEnum.ToString();
+                     
                     _resultViewModel.StatusCode = HttpStatusCode.ExpectationFailed;
                     _resultViewModel.IsSuccess = true;
-                    _resultViewModel.Message = (_User.CurrentLanguage == Convert.ToInt64(MessageLanguage.EN)) ? "Login Successfully" : "تم تسجيل الدخول بنجاح";
+                    _resultViewModel.Message =  "Login Successfully"  ;
                     _resultViewModel.Data = new UserDto
                     {
                         Username = loginDto.Username,
                         Token = _tokenService.CreateToken(user),
-                        IsActive = currentuser.IsActive,
-                        IsDeleted = currentuser.IsDeleted,
-                        Address = currentuser.Address,
-                        DepartmentId = currentuser.DepartmentId,
-                        Email = currentuser.Email,
-                        IsAdmin = currentuser.IsAdmin,
-                        IsAVLUser = currentuser.IsAVLUser,
-                        MobileNumber = currentuser.MobileNumber,
-                        LastName = currentuser.LastName,
-                        RoleId = currentuser.RoleId,
-                        UseMobile = currentuser.UseMobile,
-                        FirstName = currentuser.FirstName,
-                        UserLastEntry = DateTime.Now,
-                        ReportingPrivilege = currentuser.ReportingPrivilege,
-                        ControllingDataPrivilege = currentuser.ControllingDataPrivilege,
-                        Rased = currentuser.Rased,
-                        UseWeb = currentuser.UseWeb,
-                        ID = currentuser.ID,
-                         BranchId = BranchId,
-                         CompanyId=CompanyId,
-                         RoleName = roleName,
-                         DeviceId=DeviceId,
-                         CompanyNameAr = names.CompanyNameAr,
-                         CompanyNameEn = names.CompanyNameEn
-
+                          
                     };
 
                     return Ok( _resultViewModel);

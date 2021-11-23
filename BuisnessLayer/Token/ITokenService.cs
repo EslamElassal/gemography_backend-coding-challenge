@@ -1,4 +1,4 @@
-﻿using DataLayer.Models;
+﻿using DataLayer.DBEntities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +9,7 @@ namespace BuisnessLayer.Token
  
     public interface ITokenService
     {
-        string CreateToken( UserModel user);
+        string CreateToken( User user);
 
     }
 }

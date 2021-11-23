@@ -1,10 +1,13 @@
 using BuisnessLayer.Token;
+using DataLayer.DBEntities;
 using DataLayer.Models;
+using DataLayer.Repository;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -36,6 +39,11 @@ namespace gemography_backend_coding_challenge
             services.AddScoped<ResultViewModel>();
             services.AddScoped(typeof(ResultViewModel<>));
             services.AddScoped<ITokenService, TokenService>();
+            services.AddScoped(typeof(IUnitOfWork<CUSERSESLAMELASSALSOURCEREPOSGEMOGRAPHY_BACKENDCODINGCHALLENGEDATALAYERMODELSGEMOGRAPHYDATABASEMDFContext>), typeof(UnitOfWork<CUSERSESLAMELASSALSOURCEREPOSGEMOGRAPHY_BACKENDCODINGCHALLENGEDATALAYERMODELSGEMOGRAPHYDATABASEMDFContext>));
+            services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+            services.AddDbContext<CUSERSESLAMELASSALSOURCEREPOSGEMOGRAPHY_BACKENDCODINGCHALLENGEDATALAYERMODELSGEMOGRAPHYDATABASEMDFContext>(options => {
+                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
+            });
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
              .AddJwtBearer(options =>
              {
@@ -66,7 +74,7 @@ namespace gemography_backend_coding_challenge
             }
 
             app.UseHttpsRedirection();
-
+            app.UseAuthentication();
             app.UseRouting();
 
             app.UseAuthorization();
