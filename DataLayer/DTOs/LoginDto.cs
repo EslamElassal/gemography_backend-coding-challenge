@@ -1,4 +1,4 @@
-namespace gemography_backend_coding_challenge.DTOs
+namespace DataLayer.DTOs
 {
     public class LoginDto
     {

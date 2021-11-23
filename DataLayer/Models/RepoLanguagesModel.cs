@@ -4,9 +4,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace gemography_backend_coding_challenge.Models
+namespace DataLayer.Models
 {
-    public class RepoLanguages
+    public class RepoLanguagesModel
     {
         [JsonProperty("total_count")]
         public int TotalCount { get; set; }

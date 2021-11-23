@@ -1,7 +1,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace gemography_backend_coding_challenge.DTOs
+namespace DataLayer.DTOs
 {
     public class RegisterDto
     {

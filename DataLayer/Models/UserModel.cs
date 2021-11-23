@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace gemography_backend_coding_challenge.Models
+namespace DataLayer.Models
 {
-    public class User
+    public class UserModel
     {
         public long ID { get; set; }
         public string UserName { get; set; }

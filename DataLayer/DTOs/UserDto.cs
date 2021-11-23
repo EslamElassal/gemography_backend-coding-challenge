@@ -1,6 +1,6 @@
 using System;
 
-namespace VDream.Bll.MobileDTO
+namespace DataLayer.DTOs
 {
     public class UserDto
     {

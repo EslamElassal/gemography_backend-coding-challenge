@@ -1,4 +1,4 @@
-﻿using gemography_backend_coding_challenge.Models;
+﻿using DataLayer.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -69,7 +69,7 @@ namespace gemography_backend_coding_challenge.Controllers
         // The list of repos using the language
         async Task<List<RepoLists>> GetRepoModifiedListAsync(string JsonData)
         {
-            RepoLanguages _dataResponse = JsonConvert.DeserializeObject<RepoLanguages>(JsonData);
+            RepoLanguagesModel _dataResponse = JsonConvert.DeserializeObject<RepoLanguagesModel>(JsonData);
             List<string> langs = new List<string>();
             for (int i = 0; i < _dataResponse.Items.Count; i++)
             {
