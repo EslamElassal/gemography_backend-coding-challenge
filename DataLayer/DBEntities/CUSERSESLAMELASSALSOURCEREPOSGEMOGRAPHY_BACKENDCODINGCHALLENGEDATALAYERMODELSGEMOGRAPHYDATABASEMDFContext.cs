@@ -36,9 +36,7 @@ namespace DataLayer.DBEntities
             {
                 entity.ToTable("User");
 
-                entity.Property(e => e.Id)
-                    .ValueGeneratedNever()
-                    .HasColumnName("ID");
+                entity.Property(e => e.Id).HasColumnName("ID");
 
                 entity.Property(e => e.UserName).HasMaxLength(50);
             });
