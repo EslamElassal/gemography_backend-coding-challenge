@@ -32,10 +32,22 @@ gemography_backend-coding-challenge
 
       
 ## API List
-- ```https://localhost:5001/api/RepoLanguages``` display pure response from github in json format.
-    - ![image](https://user-images.githubusercontent.com/17914516/143138447-48365abe-ba76-4286-8ca6-2b76dc64fbc6.png)
+- First we must login to get token to Authorize you calling any api function , to login go to this url ```https://localhost:5001/api/User/login``` and send in body 
+ your Username and Password as JSON , use these data that already registered in database to can login ```{"Username":"eslam",
+"Password":"123456"}``` , show example in this image
+
+ ![image](https://user-images.githubusercontent.com/17914516/143147223-b002400b-e0f4-4ad2-857c-08e1b994b9e0.png)
+
+if you need to regiter new user use this url ```https://localhost:5001/api/User/register``` and send in body 
+ your Username and Password as JSON as follow ```{"Username":"your user name",
+"Password":"your password"}``` , show example in this image
+![image](https://user-images.githubusercontent.com/17914516/143147159-391d6278-e002-4058-8e9d-e33418d042ec.png)
+
+- Second ```https://localhost:5001/api/RepoLanguages``` display pure response from github in json format but if call this api it will return UnAuthorized Response like this image
+![image](https://user-images.githubusercontent.com/17914516/143147376-cc29abaa-2aa9-4060-a407-eda4c13a3a9d.png)
+because we didn't send our token to Authorize our access to that api , to send token we send header called ```Authorization``` and then send its value as ```Bearer``` word then space then our token like this photo
+    ![image](https://user-images.githubusercontent.com/17914516/143147584-4a847fae-bed9-40ba-817a-27d3e3635155.png)
 - ```https://localhost:5001/api/RepoLanguages/LanguagesList``` display languages list and it formated as object for every language and contain {```name: language name ,
 count: repos number, 
-items: language repos```}
-    - ![image](https://user-images.githubusercontent.com/17914516/143138542-11d3f231-dcbd-45e8-9335-42ce23ccb929.png)
-
+items: language repos```} , don't forget your token here too
+    ![image](https://user-images.githubusercontent.com/17914516/143147729-39596d00-0785-4d93-9e06-67692e4a7fb2.png)
